@@ -28,14 +28,18 @@ import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.sling.models.annotations.injectorspecific.SlingObject;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 import org.apache.sling.settings.SlingSettingsService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 
 import com.day.cq.wcm.api.Page;
 import com.day.cq.wcm.api.PageManager;
 
+
 import java.util.Optional;
 
-@Model(adaptables = Resource.class)
-public class HelloWorldModel {
+@Model(adaptables = Resource.class,
+    defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+    public class HelloWorldModel {
 
     @ValueMapValue(name=PROPERTY_RESOURCE_TYPE, injectionStrategy=InjectionStrategy.OPTIONAL)
     @Default(values="No resourceType")
@@ -49,6 +53,12 @@ public class HelloWorldModel {
     private ResourceResolver resourceResolver;
 
     private String message;
+
+    @ValueMapValue
+    private String title;
+
+    @ValueMapValue
+    private String text;
 
     @PostConstruct
     protected void init() {
@@ -66,5 +76,19 @@ public class HelloWorldModel {
     public String getMessage() {
         return message;
     }
+
+
+    public String getTitle() {
+        return StringUtils.isNotBlank(title) ? title : "Default Value here!";
+    }
+
+    /***
+    *
+    * @return All caps variation of the text value
+    */
+    public String getText() {
+        return StringUtils.isNotBlank(this.text) ? this.text.toUpperCase() : null;
+    }
+
 
 }
